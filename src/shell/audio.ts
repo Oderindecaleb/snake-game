@@ -34,9 +34,15 @@ export function createAudio(initiallyMuted: boolean) {
   }
 
   function primeContext(): void {
-    const ctx = ensureContext();
-    if (ctx.state === "suspended") {
-      ctx.resume();
+    try {
+      const ctx = ensureContext();
+      if (ctx.state === "suspended") {
+        ctx.resume().catch(() => {});
+      }
+    } catch {
+      // AudioContext construction/resume can throw or be unavailable (e.g. old iOS
+      // Safari, Web Audio disabled). Audio failing should degrade to "no sound",
+      // never break keyboard/touch input handling (see src/main.ts listeners).
     }
   }
 

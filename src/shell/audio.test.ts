@@ -82,4 +82,31 @@ describe("createAudio", () => {
     expect(instances).toHaveLength(1);
     expect(instances[0].resume).toHaveBeenCalledTimes(1);
   });
+
+  it("primeContext swallows a throwing AudioContext constructor instead of propagating", () => {
+    vi.stubGlobal(
+      "AudioContext",
+      class {
+        constructor() {
+          throw new Error("Web Audio disabled");
+        }
+      },
+    );
+    const audio = createAudio(true);
+    expect(() => audio.primeContext()).not.toThrow();
+  });
+
+  it("primeContext does not create an unhandled rejection when resume() is refused", async () => {
+    vi.stubGlobal(
+      "AudioContext",
+      class {
+        state = "suspended";
+        resume = vi.fn(() => Promise.reject(new Error("resume refused")));
+      },
+    );
+    const audio = createAudio(false);
+    expect(() => audio.primeContext()).not.toThrow();
+    // Give the microtask queue a turn to flush the (caught) rejection.
+    await Promise.resolve();
+  });
 });
