@@ -1,5 +1,6 @@
 node_modules/
 dist/
 .superpowers/
+.worktrees/
 test-results/
 playwright-report/
