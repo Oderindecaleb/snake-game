@@ -8,24 +8,24 @@ Replace swipe-to-steer with an on-screen directional pad (D-pad) for touch input
 
 ## 2. Visibility
 
-The D-pad and its associated controls are shown purely via CSS, gated on `@media (pointer: coarse) and (hover: none)` — no JavaScript feature-detection or visibility toggling. This matches touch-primary devices (phones, tablets) and stays hidden on desktop, including desktop browsers with a touchscreen but mouse/trackpad as the primary input.
+Only the D-pad grid itself is touch-gated, via CSS `@media (pointer: coarse) and (hover: none)` — no JavaScript feature-detection or visibility toggling. This matches touch-primary devices (phones, tablets) and stays hidden on desktop, including desktop browsers with a touchscreen but mouse/trackpad as the primary input.
+
+The mute + START row is **not** gated — it's always visible on every device. This matters because the mute button already exists and works on desktop today; nesting it inside a touch-only container would silently remove desktop's only way to mute. A `START` button visible on desktop is harmless (redundant with Enter/Space, just another way to click-confirm) and keeping the row ungated is simpler than gating everything except one child element.
 
 ## 3. Layout
 
-Below the canvas, in a new `#touch-controls` container (hidden by default, shown by the media query above):
-
 ```
 ┌─────────────────────────────┐
-│      [Sound: Off] [START]   │   ← one row, side by side
+│      [Sound: Off] [START]   │   ← always visible, every device
 │                              │
 │            [ ↑ ]             │
-│      [ ← ] [ ] [ → ]         │   ← classic cross D-pad
+│      [ ← ] [ ] [ → ]         │   ← classic cross D-pad, touch-only
 │            [ ↓ ]             │
 └─────────────────────────────┘
 ```
 
-- Control row: the existing `#mute-toggle` button relocates here (unchanged element/behavior), plus a new `#dpad-start` button labeled `START`.
-- D-pad: a 3×3 CSS grid — `↑` at top-center, `←`/`→` flanking an empty (invisible) center cell, `↓` at bottom-center. Same phosphor-terminal button styling as the existing mute button (monospace, thin green border, dark fill).
+- Control row (`.control-row`, always visible): the existing `#mute-toggle` button, unchanged in place and behavior, plus a new `#dpad-start` button labeled `START`.
+- D-pad (`.dpad`, touch-only): a 3×3 CSS grid — `↑` at top-center, `←`/`→` flanking an empty (invisible) center cell, `↓` at bottom-center. Same phosphor-terminal button styling as the existing mute button (monospace, thin green border, dark fill).
 
 ## 4. Input wiring
 
@@ -58,8 +58,8 @@ One press is one direction intent — matching the keyboard's one-keydown-per-pr
 
 ## 7. Files touched
 
-- Modify: `index.html` — add `#touch-controls` markup (relocated mute button, new `#dpad-start`, new D-pad buttons).
-- Modify: `src/style.css` — `#touch-controls` visibility media query, control-row layout, D-pad grid styling; remove the old standalone `#mute-toggle` positioning rule (superseded by the new row layout).
+- Modify: `index.html` — wrap the existing `#mute-toggle` and a new `#dpad-start` in an always-visible `.control-row`; add a new `.dpad` grid of 4 direction buttons below it (touch-only via CSS).
+- Modify: `src/style.css` — `.control-row` layout (replaces the old standalone `#mute-toggle` positioning rule), `.dpad` grid styling gated behind the coarse-pointer media query.
 - Modify: `src/main.ts` — wire the new buttons; simplify the canvas `touchend` handler to drop the swipe branch.
 - Modify: `src/shell/touch.ts` — remove `intentFromSwipe`.
 - Modify: `src/shell/touch.test.ts` — remove the corresponding tests.
