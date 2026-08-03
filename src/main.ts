@@ -56,11 +56,11 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
     muteButton.setAttribute("aria-pressed", String(muted));
   }
 
-  function toggleMute(event?: Event): void {
+  function toggleMute(): void {
+    audio.primeContext();
     audio.toggleMuted();
     saveMuted(audio.isMuted());
     updateMuteButton();
-    (event?.currentTarget as HTMLElement | null)?.blur();
   }
 
   // On short/landscape viewports the controls below the canvas (control row + the
@@ -192,6 +192,18 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
   const loop = createLoop(() => tickMsForLevel(state.level), { onTick: handleTick, onFrame: handleFrame });
 
   window.addEventListener("keydown", (event) => {
+    // If a <button> is focused (e.g. from a prior click on #dpad-start, a D-pad
+    // arrow, or #mute-toggle) and the player presses Enter/Space, the browser's
+    // native button-activation behavior will ALSO fire that button's own click
+    // handler from this same keypress. Without this guard, the intent below and
+    // the button's click handler's intent would both fire from one keypress
+    // (e.g. double-advancing title -> levelSelect -> playing on a single Enter).
+    // Let native button activation be the single source of truth in that case;
+    // every button's own click handler already calls audio.primeContext() itself.
+    const target = event.target as HTMLElement | null;
+    if ((event.key === "Enter" || event.key === " ") && target?.closest("button")) {
+      return;
+    }
     audio.primeContext();
     if (shouldPreventDefault(event.key)) {
       event.preventDefault();
@@ -229,20 +241,15 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
   muteButton?.addEventListener("click", toggleMute);
   updateMuteButton();
 
-  dpadStartButton?.addEventListener("click", (event) => {
+  dpadStartButton?.addEventListener("click", () => {
     audio.primeContext();
     applyIntent({ type: "confirm" });
-    // Prevent a focused button from double-firing this intent: a subsequent Enter
-    // keypress would otherwise both re-trigger native button activation (another
-    // click) and be caught by the window keydown listener below.
-    (event.currentTarget as HTMLElement).blur();
   });
 
   for (const direction of ["up", "down", "left", "right"] as const) {
-    dpadButtons[direction]?.addEventListener("click", (event) => {
+    dpadButtons[direction]?.addEventListener("click", () => {
       audio.primeContext();
       applyIntent({ type: "direction", direction });
-      (event.currentTarget as HTMLElement).blur();
     });
   }
 
