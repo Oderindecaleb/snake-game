@@ -93,6 +93,7 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
         state = { ...state, phase: { kind: "levelSelect", level: intent.level } };
       } else if (intent.type === "confirm") {
         state = createRound(level, GRID, rng);
+        isNewBest = false;
       }
       return;
     }
@@ -110,6 +111,7 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
     if (state.phase.kind === "paused") {
       if (intent.type === "toTitle" || intent.type === "cancel") {
         state = createTitleState();
+        isNewBest = false;
       } else {
         state = { ...state, phase: { kind: "playing" } };
       }
@@ -119,8 +121,10 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
     if (state.phase.kind === "gameOver") {
       if (intent.type === "confirm") {
         state = createRound(state.level, GRID, rng);
+        isNewBest = false;
       } else if (intent.type === "toTitle" || intent.type === "cancel") {
         state = createTitleState();
+        isNewBest = false;
       }
     }
   }
