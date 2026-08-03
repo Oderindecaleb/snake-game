@@ -9,7 +9,16 @@
   <body>
     <div id="game-shell">
       <canvas id="game-canvas"></canvas>
-      <button id="mute-toggle" type="button" aria-pressed="true">Sound: Off</button>
+      <div class="control-row">
+        <button id="mute-toggle" type="button" aria-pressed="true">Sound: Off</button>
+        <button id="dpad-start" type="button">START</button>
+      </div>
+      <div class="dpad">
+        <button id="dpad-up" class="dpad-btn dpad-up" type="button" aria-label="Up">&uarr;</button>
+        <button id="dpad-left" class="dpad-btn dpad-left" type="button" aria-label="Left">&larr;</button>
+        <button id="dpad-right" class="dpad-btn dpad-right" type="button" aria-label="Right">&rarr;</button>
+        <button id="dpad-down" class="dpad-btn dpad-down" type="button" aria-label="Down">&darr;</button>
+      </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

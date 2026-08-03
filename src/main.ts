@@ -31,6 +31,13 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
   let currentCellPx = 1;
   const audio = createAudio(loadMuted());
   const muteButton = document.querySelector<HTMLButtonElement>("#mute-toggle");
+  const dpadStartButton = document.querySelector<HTMLButtonElement>("#dpad-start");
+  const dpadButtons: Record<Direction, HTMLButtonElement | null> = {
+    up: document.querySelector<HTMLButtonElement>("#dpad-up"),
+    down: document.querySelector<HTMLButtonElement>("#dpad-down"),
+    left: document.querySelector<HTMLButtonElement>("#dpad-left"),
+    right: document.querySelector<HTMLButtonElement>("#dpad-right"),
+  };
 
   function currentLevel(): number {
     return state.phase.kind === "levelSelect" ? state.phase.level : state.level;
@@ -205,6 +212,18 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
 
   muteButton?.addEventListener("click", toggleMute);
   updateMuteButton();
+
+  dpadStartButton?.addEventListener("click", () => {
+    audio.primeContext();
+    applyIntent({ type: "confirm" });
+  });
+
+  for (const direction of ["up", "down", "left", "right"] as const) {
+    dpadButtons[direction]?.addEventListener("click", () => {
+      audio.primeContext();
+      applyIntent({ type: "direction", direction });
+    });
+  }
 
   window.addEventListener("resize", resize);
   resize();
