@@ -14,7 +14,10 @@ body {
 }
 
 #game-shell {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 
 canvas {
@@ -26,9 +29,7 @@ canvas {
 }
 
 #mute-toggle {
-  position: absolute;
-  top: 6px;
-  right: 6px;
+  align-self: flex-end;
   font-family: "Courier New", monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
