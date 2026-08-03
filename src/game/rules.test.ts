@@ -110,7 +110,7 @@ describe("tick", () => {
         { x: 4, y: 4 },
         { x: 4, y: 5 },
       ],
-      direction: "right",
+      direction: "left",
       food: null,
     });
     const result = tick(state, noRng);
