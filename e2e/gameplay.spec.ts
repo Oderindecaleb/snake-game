@@ -31,7 +31,9 @@ test("writes a new best score after dying, then keeps it after reloading", async
   await page.goto("/");
   await expect.poll(() => page.evaluate(() => window.__snakeTestState__().phase)).toBe("title");
 
-  await page.keyboard.press("Enter");
+  // #dpad-start is unconditionally visible (not touch-gated), so clicking it should
+  // produce the same "confirm" intent as pressing Enter - this exercises that wiring.
+  await page.click("#dpad-start");
   await page.keyboard.press("1");
   await expect.poll(() => page.evaluate(() => window.__snakeTestState__().best)).toBe(0);
 

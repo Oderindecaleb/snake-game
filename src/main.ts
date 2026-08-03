@@ -56,10 +56,26 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
     muteButton.setAttribute("aria-pressed", String(muted));
   }
 
-  function toggleMute(): void {
+  function toggleMute(event?: Event): void {
     audio.toggleMuted();
     saveMuted(audio.isMuted());
     updateMuteButton();
+    (event?.currentTarget as HTMLElement | null)?.blur();
+  }
+
+  // On short/landscape viewports the controls below the canvas (control row + the
+  // touch D-pad, when visible) can eat most of the available height. Measuring their
+  // real rendered height keeps this correct automatically: on non-touch viewports the
+  // .dpad grid is display:none (offsetHeight 0), so no space is reserved for it; on
+  // touch viewports where it's shown, its actual grid height (with gaps) is counted.
+  function belowCanvasHeightPx(): number {
+    const gapPx = 6; // #game-shell's flex `gap`, from src/style.css
+    const controlRow = document.querySelector<HTMLElement>(".control-row");
+    const dpad = document.querySelector<HTMLElement>(".dpad");
+    const controlRowHeight = controlRow?.offsetHeight ?? 0;
+    const dpadHeight = dpad?.offsetHeight ?? 0;
+    // Two gaps: canvas -> control-row, control-row -> dpad.
+    return controlRowHeight + dpadHeight + gapPx * 2;
   }
 
   // Backing store is sized for devicePixelRatio so the phosphor glow and scanlines
@@ -67,7 +83,12 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
   // logical units so renderer/playfield/screens code never needs to know about DPR (spec §6.2).
   function resize(): void {
     const maxWidth = Math.min(window.innerWidth - 16, 480);
-    currentCellPx = cellPixelSize(maxWidth);
+    const widthCellPx = cellPixelSize(maxWidth);
+
+    const maxHeight = window.innerHeight - belowCanvasHeightPx() - HUD_HEIGHT_PX;
+    const heightCellPx = Math.max(1, Math.floor(maxHeight / GRID.height));
+
+    currentCellPx = Math.min(widthCellPx, heightCellPx);
     const dpr = window.devicePixelRatio || 1;
     const cssWidth = GRID.width * currentCellPx;
     const cssHeight = GRID.height * currentCellPx + HUD_HEIGHT_PX;
@@ -208,15 +229,20 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
   muteButton?.addEventListener("click", toggleMute);
   updateMuteButton();
 
-  dpadStartButton?.addEventListener("click", () => {
+  dpadStartButton?.addEventListener("click", (event) => {
     audio.primeContext();
     applyIntent({ type: "confirm" });
+    // Prevent a focused button from double-firing this intent: a subsequent Enter
+    // keypress would otherwise both re-trigger native button activation (another
+    // click) and be caught by the window keydown listener below.
+    (event.currentTarget as HTMLElement).blur();
   });
 
   for (const direction of ["up", "down", "left", "right"] as const) {
-    dpadButtons[direction]?.addEventListener("click", () => {
+    dpadButtons[direction]?.addEventListener("click", (event) => {
       audio.primeContext();
       applyIntent({ type: "direction", direction });
+      (event.currentTarget as HTMLElement).blur();
     });
   }
 
