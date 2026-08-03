@@ -22,7 +22,7 @@ function stubAudioContext(initialState: "running" | "suspended" = "running") {
     state: "running" | "suspended" = initialState;
     createOscillator = vi.fn(() => new StubOscillator());
     createGain = vi.fn(() => new StubGain());
-    resume = vi.fn();
+    resume = vi.fn(() => Promise.resolve());
     destination = {};
     constructor() {
       instances.push(this);
