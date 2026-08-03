@@ -8,7 +8,7 @@ import type { Intent } from "./shell/intent";
 import { intentFromKey, shouldPreventDefault } from "./shell/keyboard";
 import { createLoop } from "./shell/loop";
 import { loadBests, loadMuted, recordScore, saveMuted, type Bests } from "./shell/storage";
-import { intentFromSwipe, isTap, type TouchPoint } from "./shell/touch";
+import { isTap, type TouchPoint } from "./shell/touch";
 import { tickMsForLevel } from "./game/levels";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game-canvas");
@@ -195,11 +195,6 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
     const end: TouchPoint = { x: touch.clientX, y: touch.clientY };
     if (isTap(touchStart, end)) {
       applyIntent({ type: "confirm" });
-    } else {
-      const intent = intentFromSwipe(touchStart, end);
-      if (intent) {
-        applyIntent(intent);
-      }
     }
     touchStart = null;
   });
