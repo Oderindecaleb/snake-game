@@ -157,12 +157,14 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
       cellPx: currentCellPx,
       best: bestForCurrentLevel(),
       reducedMotion: reducedMotionQuery.matches,
+      isNewBest,
     });
   }
 
   const loop = createLoop(() => tickMsForLevel(state.level), { onTick: handleTick, onFrame: handleFrame });
 
   window.addEventListener("keydown", (event) => {
+    audio.primeContext();
     if (shouldPreventDefault(event.key)) {
       event.preventDefault();
     }
@@ -178,6 +180,7 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
     touchStart = { x: touch.clientX, y: touch.clientY };
   });
   canvas.addEventListener("touchend", (event) => {
+    audio.primeContext();
     if (!touchStart) {
       return;
     }

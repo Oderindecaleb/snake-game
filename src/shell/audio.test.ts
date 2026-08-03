@@ -14,13 +14,15 @@ class StubGain {
   connect = vi.fn().mockReturnThis();
 }
 
-function stubAudioContext() {
+function stubAudioContext(initialState: "running" | "suspended" = "running") {
   const instances: StubAudioContextInstance[] = [];
 
   class StubAudioContextInstance {
     currentTime = 0;
+    state: "running" | "suspended" = initialState;
     createOscillator = vi.fn(() => new StubOscillator());
     createGain = vi.fn(() => new StubGain());
+    resume = vi.fn();
     destination = {};
     constructor() {
       instances.push(this);
@@ -63,5 +65,21 @@ describe("createAudio", () => {
     expect(instances).toHaveLength(1);
     audio.play("death");
     expect(instances).toHaveLength(1);
+  });
+
+  it("primeContext constructs the AudioContext even when muted", () => {
+    const instances = stubAudioContext();
+    const audio = createAudio(true);
+    expect(instances).toHaveLength(0);
+    audio.primeContext();
+    expect(instances).toHaveLength(1);
+  });
+
+  it("primeContext resumes an existing suspended context", () => {
+    const instances = stubAudioContext("suspended");
+    const audio = createAudio(false);
+    audio.primeContext();
+    expect(instances).toHaveLength(1);
+    expect(instances[0].resume).toHaveBeenCalledTimes(1);
   });
 });

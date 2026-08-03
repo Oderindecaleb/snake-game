@@ -33,6 +33,13 @@ export function createAudio(initiallyMuted: boolean) {
     oscillator.stop(ctx.currentTime + 0.12);
   }
 
+  function primeContext(): void {
+    const ctx = ensureContext();
+    if (ctx.state === "suspended") {
+      ctx.resume();
+    }
+  }
+
   function isMuted(): boolean {
     return muted;
   }
@@ -46,5 +53,5 @@ export function createAudio(initiallyMuted: boolean) {
     return muted;
   }
 
-  return { play, isMuted, setMuted, toggleMuted };
+  return { play, primeContext, isMuted, setMuted, toggleMuted };
 }

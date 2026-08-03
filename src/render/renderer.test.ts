@@ -52,7 +52,7 @@ describe("createRenderer", () => {
   it("draws each phase without throwing", () => {
     const renderer = createRenderer();
     const ctx = createStubCtx() as unknown as CanvasRenderingContext2D;
-    const options = { cellPx: 10, best: 20, reducedMotion: false };
+    const options = { cellPx: 10, best: 20, reducedMotion: false, isNewBest: false };
 
     for (const phase of [
       { kind: "title" } as const,
@@ -70,12 +70,22 @@ describe("createRenderer", () => {
     const stub = createStubCtx();
     const ctx = stub as unknown as CanvasRenderingContext2D;
 
-    renderer.draw(ctx, stateWithPhase({ kind: "playing" }), 1000, { cellPx: 10, best: 0, reducedMotion: true });
+    renderer.draw(ctx, stateWithPhase({ kind: "playing" }), 1000, {
+      cellPx: 10,
+      best: 0,
+      reducedMotion: true,
+      isNewBest: false,
+    });
     const callsWithoutMotion = stub.fillRect.mock.calls.length;
 
     const stub2 = createStubCtx();
     const ctx2 = stub2 as unknown as CanvasRenderingContext2D;
-    renderer.draw(ctx2, stateWithPhase({ kind: "playing" }), 1000, { cellPx: 10, best: 0, reducedMotion: false });
+    renderer.draw(ctx2, stateWithPhase({ kind: "playing" }), 1000, {
+      cellPx: 10,
+      best: 0,
+      reducedMotion: false,
+      isNewBest: false,
+    });
 
     expect(stub2.fillRect.mock.calls.length).toBeGreaterThan(callsWithoutMotion);
   });

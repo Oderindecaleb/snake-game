@@ -73,10 +73,11 @@ describe("saveBests", () => {
 
 describe("recordScore", () => {
   it("reports a new best and updates it when the score is higher", () => {
-    stubLocalStorage();
+    const stub = stubLocalStorage();
     const result = recordScore({ 2: 10 }, 2, 15);
     expect(result.isNewBest).toBe(true);
     expect(result.bests).toEqual({ 2: 15 });
+    expect(JSON.parse(stub.getItem("snake.bests.v1") ?? "null")).toEqual({ 2: 15 });
   });
 
   it("does not update or flag a new best when the score is lower or equal", () => {

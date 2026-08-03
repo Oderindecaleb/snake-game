@@ -7,6 +7,7 @@ export interface RenderOptions {
   cellPx: number;
   best: number;
   reducedMotion: boolean;
+  isNewBest: boolean;
 }
 
 export function createRenderer() {
@@ -22,6 +23,8 @@ export function createRenderer() {
 
     ctx.save();
     ctx.translate(0, HUD_HEIGHT_PX);
+    ctx.fillStyle = THEME.field;
+    ctx.fillRect(0, 0, fieldWidth, fieldHeight);
     drawBorder(ctx, fieldWidth, fieldHeight);
     drawSnake(ctx, state.snake, cellPx);
     drawFood(ctx, state.food, cellPx, reducedMotion ? 0 : timeMs);
@@ -36,8 +39,7 @@ export function createRenderer() {
     } else if (state.phase.kind === "paused") {
       drawPausedOverlay(ctx, fieldWidth, fieldHeight);
     } else if (state.phase.kind === "gameOver") {
-      const isNewBest = state.score > 0 && state.score >= best;
-      drawGameOverScreen(ctx, fieldWidth, fieldHeight, state, best, isNewBest);
+      drawGameOverScreen(ctx, fieldWidth, fieldHeight, state, best, options.isNewBest);
     }
 
     ctx.restore();

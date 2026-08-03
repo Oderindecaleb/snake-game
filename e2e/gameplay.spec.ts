@@ -6,17 +6,15 @@ declare global {
   }
 }
 
-test("shows a stored best score, then keeps it after dying and reloading", async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("snake.bests.v1", JSON.stringify({ 1: 42 }));
-  });
-
+test("writes a new best score after dying, then keeps it after reloading", async ({ page }) => {
+  // No best seeded for level 1, so the round below exercises the actual
+  // "first best ever" write path through recordScore/saveBests, not just a read.
   await page.goto("/");
   await expect.poll(() => page.evaluate(() => window.__snakeTestState__().phase)).toBe("title");
 
   await page.keyboard.press("Enter");
   await page.keyboard.press("1");
-  await expect.poll(() => page.evaluate(() => window.__snakeTestState__().best)).toBe(42);
+  await expect.poll(() => page.evaluate(() => window.__snakeTestState__().best)).toBe(0);
 
   await page.keyboard.press("Enter");
   await expect.poll(() => page.evaluate(() => window.__snakeTestState__().phase)).toBe("playing");
@@ -27,9 +25,11 @@ test("shows a stored best score, then keeps it after dying and reloading", async
     .poll(() => page.evaluate(() => window.__snakeTestState__().phase), { timeout: 10_000 })
     .toBe("gameOver");
 
+  const score = await page.evaluate(() => window.__snakeTestState__().score);
+
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__snakeTestState__().phase)).toBe("title");
   await page.keyboard.press("Enter");
   await page.keyboard.press("1");
-  await expect.poll(() => page.evaluate(() => window.__snakeTestState__().best)).toBe(42);
+  await expect.poll(() => page.evaluate(() => window.__snakeTestState__().best)).toBe(score);
 });
