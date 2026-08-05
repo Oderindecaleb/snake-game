@@ -109,4 +109,22 @@ describe("createAudio", () => {
     // Give the microtask queue a turn to flush the (caught) rejection.
     await Promise.resolve();
   });
+
+  it("plays 'die' as a sawtooth tone at 130Hz", () => {
+    const instances = stubAudioContext();
+    const audio = createAudio(false);
+    audio.play("die");
+    const oscillator = instances[0].createOscillator.mock.results[0]?.value as StubOscillator;
+    expect(oscillator.type).toBe("sawtooth");
+    expect(oscillator.frequency.value).toBe(130);
+  });
+
+  it("still plays the existing 'eat' kind as a square wave at 880Hz", () => {
+    const instances = stubAudioContext();
+    const audio = createAudio(false);
+    audio.play("eat");
+    const oscillator = instances[0].createOscillator.mock.results[0]?.value as StubOscillator;
+    expect(oscillator.type).toBe("square");
+    expect(oscillator.frequency.value).toBe(880);
+  });
 });
