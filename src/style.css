@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap");
+
 :root {
   color-scheme: dark;
 }
@@ -92,8 +94,6 @@ canvas {
 }
 
 /* ---------- Snake Candy redesign (additive; wired live in Task 7) ---------- */
-
-@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap");
 
 @keyframes candy-drift {
   from { transform: translateX(-8%); }
