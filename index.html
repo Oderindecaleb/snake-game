@@ -20,6 +20,122 @@
         <button id="dpad-down" class="dpad-btn dpad-down" type="button" aria-label="Down">&darr;</button>
       </div>
     </div>
+    <div class="candy-clouds" aria-hidden="true">
+      <span class="candy-cloud candy-cloud-1"></span>
+      <span class="candy-cloud candy-cloud-2"></span>
+      <span class="candy-cloud candy-cloud-3"></span>
+      <span class="candy-cloud candy-cloud-4"></span>
+      <span class="candy-cloud candy-cloud-5"></span>
+    </div>
+    <div id="candy-shell" class="candy-hidden">
+      <header class="candy-header">
+        <button id="candy-back" class="candy-icon-btn" type="button" aria-label="Back to menu">&#8592;</button>
+        <div class="candy-best-badge">
+          <span id="candy-hud-best">0</span>
+          <span class="candy-berry" aria-hidden="true"></span>
+        </div>
+        <button id="candy-sound" class="candy-icon-btn" type="button" aria-label="Toggle sound">&#9834;</button>
+      </header>
+
+      <section id="screen-menu" class="candy-screen candy-visible">
+        <h1 class="candy-title">SNAKE</h1>
+        <div class="candy-subtitle">SWEET EDITION</div>
+        <div class="candy-mascot-frame">
+          <div class="candy-mascot-shadow"></div>
+          <div class="candy-mascot-box">
+            <img src="/snake-mascot.png" alt="Snake mascot in sunglasses" class="candy-mascot" />
+          </div>
+        </div>
+        <div class="candy-menu-grid">
+          <button id="menu-levels" class="candy-btn candy-btn-green candy-menu-levels" type="button">LEVEL</button>
+          <button id="menu-play" class="candy-btn candy-btn-play candy-menu-play" type="button" aria-label="Play">
+            <span class="candy-play-triangle" aria-hidden="true"></span>
+          </button>
+          <button id="menu-scores" class="candy-btn candy-btn-gold candy-menu-scores" type="button">BEST</button>
+          <button id="menu-sound" class="candy-btn candy-btn-purple candy-menu-sound" type="button">SOUND</button>
+          <button id="menu-help" class="candy-btn candy-btn-pink candy-menu-help" type="button">HOW TO</button>
+        </div>
+      </section>
+
+      <section id="screen-levels" class="candy-screen">
+        <h1 class="candy-title candy-title-md">LEVELS</h1>
+        <div class="candy-subtitle">FASTER SNAKE, BIGGER POINTS</div>
+        <div class="candy-levels-grid">
+          <button class="candy-level-tile" type="button" data-level="1"><span class="candy-level-num">1</span><span class="candy-level-best" data-level-best="1">BEST 0</span></button>
+          <button class="candy-level-tile" type="button" data-level="2"><span class="candy-level-num">2</span><span class="candy-level-best" data-level-best="2">BEST 0</span></button>
+          <button class="candy-level-tile" type="button" data-level="3"><span class="candy-level-num">3</span><span class="candy-level-best" data-level-best="3">BEST 0</span></button>
+          <button class="candy-level-tile" type="button" data-level="4"><span class="candy-level-num">4</span><span class="candy-level-best" data-level-best="4">BEST 0</span></button>
+          <button class="candy-level-tile" type="button" data-level="5"><span class="candy-level-num">5</span><span class="candy-level-best" data-level-best="5">BEST 0</span></button>
+          <button class="candy-level-tile" type="button" data-level="6"><span class="candy-level-num">6</span><span class="candy-level-best" data-level-best="6">BEST 0</span></button>
+          <button class="candy-level-tile" type="button" data-level="7"><span class="candy-level-num">7</span><span class="candy-level-best" data-level-best="7">BEST 0</span></button>
+          <button class="candy-level-tile" type="button" data-level="8"><span class="candy-level-num">8</span><span class="candy-level-best" data-level-best="8">BEST 0</span></button>
+          <button class="candy-level-tile" type="button" data-level="9"><span class="candy-level-num">9</span><span class="candy-level-best" data-level-best="9">BEST 0</span></button>
+        </div>
+        <button id="levels-back" class="candy-btn candy-btn-green candy-btn-wide" type="button">BACK</button>
+      </section>
+
+      <section id="screen-board" class="candy-screen">
+        <div class="candy-board-hud">
+          <div class="candy-chip"><span class="candy-chip-label">SCORE</span><span id="board-score" class="candy-chip-value candy-chip-red">000</span></div>
+          <div class="candy-chip"><span class="candy-chip-label">LVL</span><span id="board-level" class="candy-chip-value candy-chip-blue">1</span></div>
+        </div>
+        <div class="candy-canvas-frame">
+          <canvas id="candy-canvas"></canvas>
+          <div id="overlay-paused" class="candy-overlay">
+            <div class="candy-overlay-title">PAUSED</div>
+            <div class="candy-overlay-actions">
+              <button id="paused-resume" class="candy-btn candy-btn-green" type="button">RESUME</button>
+              <button id="paused-menu" class="candy-btn candy-btn-white" type="button">MENU</button>
+            </div>
+          </div>
+          <div id="overlay-over" class="candy-overlay">
+            <div id="over-title" class="candy-overlay-title">GAME OVER</div>
+            <div class="candy-overlay-stats">
+              <div id="over-score" class="candy-pill candy-pill-red">SCORE 0</div>
+              <div id="over-best" class="candy-pill candy-pill-blue">BEST 0</div>
+            </div>
+            <div class="candy-overlay-actions">
+              <button id="over-again" class="candy-btn candy-btn-red" type="button">AGAIN</button>
+              <button id="over-menu" class="candy-btn candy-btn-white" type="button">MENU</button>
+            </div>
+          </div>
+        </div>
+        <div class="candy-dpad">
+          <button id="candy-dpad-up" class="candy-dpad-btn candy-dpad-up" type="button" aria-label="Up">&#8593;</button>
+          <button id="candy-dpad-left" class="candy-dpad-btn candy-dpad-left" type="button" aria-label="Left">&#8592;</button>
+          <button id="candy-dpad-pause" class="candy-dpad-btn candy-dpad-pause candy-dpad-center" type="button">PAUSE</button>
+          <button id="candy-dpad-right" class="candy-dpad-btn candy-dpad-right" type="button" aria-label="Right">&#8594;</button>
+          <button id="candy-dpad-down" class="candy-dpad-btn candy-dpad-down" type="button" aria-label="Down">&#8595;</button>
+        </div>
+        <div class="candy-hint">ARROW KEYS &middot; SPACE TO PAUSE</div>
+      </section>
+
+      <section id="screen-help" class="candy-screen">
+        <h1 class="candy-title candy-title-md">HOW TO</h1>
+        <div class="candy-help-list">
+          <div class="candy-help-row"><span class="candy-help-num candy-help-num-1">1</span><span>Steer with the arrows or the D-pad. No U-turns.</span></div>
+          <div class="candy-help-row"><span class="candy-help-num candy-help-num-2">2</span><span>Eat the berries. Each one is worth the level number.</span></div>
+          <div class="candy-help-row"><span class="candy-help-num candy-help-num-3">3</span><span>Walls and your own tail end the run. Fill the field to win.</span></div>
+        </div>
+        <button id="help-back" class="candy-btn candy-btn-green candy-btn-wide" type="button">BACK</button>
+      </section>
+
+      <section id="screen-scores" class="candy-screen">
+        <h1 class="candy-title candy-title-md">BEST</h1>
+        <div class="candy-scores-list">
+          <div class="candy-score-row"><span>LEVEL 1</span><span class="candy-score-value" data-score-level="1">0</span></div>
+          <div class="candy-score-row"><span>LEVEL 2</span><span class="candy-score-value" data-score-level="2">0</span></div>
+          <div class="candy-score-row"><span>LEVEL 3</span><span class="candy-score-value" data-score-level="3">0</span></div>
+          <div class="candy-score-row"><span>LEVEL 4</span><span class="candy-score-value" data-score-level="4">0</span></div>
+          <div class="candy-score-row"><span>LEVEL 5</span><span class="candy-score-value" data-score-level="5">0</span></div>
+          <div class="candy-score-row"><span>LEVEL 6</span><span class="candy-score-value" data-score-level="6">0</span></div>
+          <div class="candy-score-row"><span>LEVEL 7</span><span class="candy-score-value" data-score-level="7">0</span></div>
+          <div class="candy-score-row"><span>LEVEL 8</span><span class="candy-score-value" data-score-level="8">0</span></div>
+          <div class="candy-score-row"><span>LEVEL 9</span><span class="candy-score-value" data-score-level="9">0</span></div>
+        </div>
+        <button id="scores-back" class="candy-btn candy-btn-green candy-btn-wide" type="button">BACK</button>
+      </section>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
