@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body { margin: 0; background: #59c6ef; font-family: "Baloo 2", "Trebuchet MS", sans-serif; }
+  a { color: #1f7fc4; }
+  a:hover { color: #14568a; }
+  @keyframes drift { from { transform: translateX(-8%); } to { transform: translateX(8%); } }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @keyframes pop { from { transform: scale(0.86); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+</style>
+</helmet>
+<div style="position:relative;width:440px;min-height:840px;margin:0 auto;overflow:hidden;background:linear-gradient(180deg,#4cbdf0 0%,#7fd6f3 32%,#bfeacb 68%,#f7eec2 100%);display:flex;flex-direction:column;align-items:center;padding:18px 20px 26px;box-sizing:border-box;user-select:none">
+
+  <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+    <div style="position:absolute;top:520px;left:-90px;width:300px;height:130px;border-radius:50%;background:rgba(255,255,255,0.34);filter:blur(14px);animation:drift 26s ease-in-out infinite alternate"></div>
+    <div style="position:absolute;top:560px;left:40px;width:170px;height:96px;border-radius:50%;background:rgba(255,255,255,0.3);filter:blur(12px)"></div>
+    <div style="position:absolute;top:660px;right:-90px;width:280px;height:120px;border-radius:50%;background:rgba(255,255,255,0.3);filter:blur(14px);animation:drift 34s ease-in-out infinite alternate-reverse"></div>
+    <div style="position:absolute;bottom:60px;right:20px;width:180px;height:90px;border-radius:50%;background:rgba(255,255,255,0.26);filter:blur(12px)"></div>
+    <div style="position:absolute;bottom:20px;left:-70px;width:240px;height:100px;border-radius:50%;background:rgba(255,255,255,0.24);filter:blur(14px)"></div>
+  </div>
+
+  <div style="position:relative;display:flex;align-items:center;justify-content:space-between;width:100%;gap:10px;z-index:2">
+    <button type="button" onClick="{{ onBack }}" style="width:56px;height:56px;flex:0 0 auto;border:none;border-radius:18px;background:#ffffff;border-bottom:5px solid #d7e3ea;color:#2c3e4a;font-family:inherit;font-size:26px;font-weight:800;line-height:1;cursor:pointer;box-shadow:0 4px 10px rgba(24,60,90,0.18)" style-active="transform:translateY(3px);border-bottom-width:2px">&#8592;</button>
+    <div style="display:flex;align-items:center;gap:8px;height:52px;padding:0 20px;border-radius:26px;background:#1f8fe0;border:3px solid #ffffff;border-bottom:6px solid #1569ab;box-shadow:0 4px 10px rgba(24,60,90,0.2)">
+      <span style="color:#ffffff;font-size:24px;font-weight:800;letter-spacing:0.02em">{{ hudBest }}</span>
+      <span style="width:20px;height:24px;border-radius:50% 50% 55% 55%/40% 40% 70% 70%;background:radial-gradient(circle at 34% 28%,#ff9ad0,#e0349a 70%);box-shadow:inset 0 -3px 4px rgba(120,10,70,0.4)"></span>
+    </div>
+    <button type="button" onClick="{{ onToggleSound }}" style="width:56px;height:56px;flex:0 0 auto;border:none;border-radius:18px;background:#ffffff;border-bottom:5px solid #d7e3ea;color:#2c3e4a;font-family:inherit;font-size:22px;font-weight:800;line-height:1;cursor:pointer;box-shadow:0 4px 10px rgba(24,60,90,0.18)" style-active="transform:translateY(3px);border-bottom-width:2px">{{ soundGlyph }}</button>
+  </div>
+
+  <sc-if value="{{ isMenu }}" hint-placeholder-val="{{ true }}">
+    <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%;animation:pop 0.28s ease-out">
+      <div style="margin:34px 0 10px;transform:rotate(-2.5deg)">
+        <div style="font-size:86px;font-weight:800;line-height:0.9;letter-spacing:0.02em;color:#ffffff;-webkit-text-stroke:11px #1f7fc4;paint-order:stroke fill;text-shadow:0 11px 0 #14568a">SNAKE</div>
+      </div>
+      <div style="margin:-4px 0 22px;padding:5px 16px;border-radius:14px;background:rgba(255,255,255,0.62);color:#17607f;font-size:17px;font-weight:700;letter-spacing:0.14em">SWEET EDITION</div>
+
+      <div style="position:relative;width:230px;height:230px;border-radius:38px;background:linear-gradient(180deg,#2f9fe8,#1c7fce);border-bottom:9px solid #14669f;box-shadow:0 12px 24px rgba(20,60,100,0.25),inset 0 6px 0 rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center">
+        <div style="position:absolute;bottom:22px;width:150px;height:22px;border-radius:50%;background:rgba(10,50,90,0.28)"></div>
+        <div style="position:relative;width:196px;height:196px;border-radius:30px;background:#faf6ec;box-shadow:inset 0 -6px 12px rgba(120,110,80,0.14);display:flex;align-items:flex-end;justify-content:center;overflow:hidden">
+          <img src="assets/snake-mascot.png" alt="Snake mascot in sunglasses" style="width:192px;height:192px;object-fit:contain;animation:bob 3.2s ease-in-out infinite" />
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:auto auto;gap:14px;width:100%;margin-top:26px">
+        <button type="button" onClick="{{ onLevels }}" style="grid-column:1;grid-row:1;height:96px;border:none;border-radius:24px;background:#8dc551;border-bottom:8px solid #6ba135;box-shadow:inset 0 5px 0 rgba(255,255,255,0.3);color:#ffffff;font-family:inherit;font-size:19px;font-weight:800;letter-spacing:0.04em;cursor:pointer" style-active="transform:translateY(4px);border-bottom-width:4px">LEVEL</button>
+        <button type="button" onClick="{{ onPlay }}" style="grid-column:2;grid-row:1 / span 2;border:none;border-radius:30px;background:#e8574f;border-bottom:10px solid #bb413c;box-shadow:inset 0 6px 0 rgba(255,255,255,0.28),0 10px 18px rgba(120,30,30,0.2);cursor:pointer;display:flex;align-items:center;justify-content:center" style-active="transform:translateY(5px);border-bottom-width:5px">
+          <span style="display:block;width:0;height:0;border-style:solid;border-width:44px 0 44px 66px;border-color:transparent transparent transparent #ffffff;filter:drop-shadow(0 6px 0 rgba(190,80,72,0.55));margin-left:12px"></span>
+        </button>
+        <button type="button" onClick="{{ onScores }}" style="grid-column:3;grid-row:1;height:96px;border:none;border-radius:24px;background:#f2b23c;border-bottom:8px solid #cd8d20;box-shadow:inset 0 5px 0 rgba(255,255,255,0.3);color:#ffffff;font-family:inherit;font-size:19px;font-weight:800;letter-spacing:0.04em;cursor:pointer" style-active="transform:translateY(4px);border-bottom-width:4px">BEST</button>
+        <button type="button" onClick="{{ onToggleSound }}" style="grid-column:1;grid-row:2;height:96px;border:none;border-radius:24px;background:#8b8cd8;border-bottom:8px solid #6a6bbb;box-shadow:inset 0 5px 0 rgba(255,255,255,0.3);color:#ffffff;font-family:inherit;font-size:19px;font-weight:800;letter-spacing:0.04em;cursor:pointer" style-active="transform:translateY(4px);border-bottom-width:4px">{{ soundLabel }}</button>
+        <button type="button" onClick="{{ onHelp }}" style="grid-column:3;grid-row:2;height:96px;border:none;border-radius:24px;background:#c07fdc;border-bottom:8px solid #9a5abb;box-shadow:inset 0 5px 0 rgba(255,255,255,0.3);color:#ffffff;font-family:inherit;font-size:19px;font-weight:800;letter-spacing:0.04em;cursor:pointer" style-active="transform:translateY(4px);border-bottom-width:4px">HOW TO</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isLevels }}" hint-placeholder-val="{{ false }}">
+    <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%;animation:pop 0.24s ease-out">
+      <div style="margin:38px 0 6px;font-size:46px;font-weight:800;color:#ffffff;-webkit-text-stroke:8px #1f7fc4;paint-order:stroke fill;text-shadow:0 7px 0 #14568a">LEVELS</div>
+      <div style="margin:8px 0 26px;padding:5px 16px;border-radius:14px;background:rgba(255,255,255,0.62);color:#17607f;font-size:16px;font-weight:700;letter-spacing:0.1em">FASTER SNAKE, BIGGER POINTS</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%">
+        <sc-for list="{{ levelTiles }}" as="tile" hint-placeholder-count="9">
+          <button type="button" onClick="{{ tile.onSelect }}" style="height:110px;border:none;border-radius:26px;background:#37a7ea;border-bottom:8px solid #1f7fc4;box-shadow:inset 0 5px 0 rgba(255,255,255,0.28);cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px" style-active="transform:translateY(4px);border-bottom-width:4px">
+            <span style="color:#ffffff;font-size:38px;font-weight:800;line-height:1;text-shadow:0 3px 0 rgba(20,86,138,0.5)">{{ tile.label }}</span>
+            <span style="color:rgba(255,255,255,0.88);font-size:14px;font-weight:700;letter-spacing:0.06em">{{ tile.best }}</span>
+          </button>
+        </sc-for>
+      </div>
+      <button type="button" onClick="{{ onBack }}" style="margin-top:30px;padding:14px 40px;border:none;border-radius:24px;background:#8dc551;border-bottom:8px solid #6ba135;box-shadow:inset 0 5px 0 rgba(255,255,255,0.3);color:#ffffff;font-family:inherit;font-size:22px;font-weight:800;letter-spacing:0.06em;cursor:pointer" style-active="transform:translateY(4px);border-bottom-width:4px">BACK</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ false }}">
+    <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%;margin-top:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:14px;gap:10px">
+        <div style="display:flex;align-items:baseline;gap:8px;height:48px;padding:0 18px;border-radius:24px;background:#ffffff;border-bottom:5px solid #d7e3ea;box-shadow:0 4px 10px rgba(24,60,90,0.15)">
+          <span style="color:#8fa4b1;font-size:14px;font-weight:800;letter-spacing:0.1em">SCORE</span>
+          <span style="color:#e8574f;font-size:26px;font-weight:800">{{ scoreText }}</span>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:8px;height:48px;padding:0 18px;border-radius:24px;background:#ffffff;border-bottom:5px solid #d7e3ea;box-shadow:0 4px 10px rgba(24,60,90,0.15)">
+          <span style="color:#8fa4b1;font-size:14px;font-weight:800;letter-spacing:0.1em">LVL</span>
+          <span style="color:#1f8fe0;font-size:26px;font-weight:800">{{ levelText }}</span>
+        </div>
+      </div>
+
+      <div style="position:relative;padding:9px;border-radius:30px;background:linear-gradient(180deg,#ffffff,#e6f1f6);border-bottom:8px solid #cddde5;box-shadow:0 12px 24px rgba(20,60,100,0.22)">
+        <canvas ref="{{ canvasRef }}" width="384" height="256" style="display:block;width:384px;height:256px;border-radius:22px;touch-action:none"></canvas>
+
+        <sc-if value="{{ isPaused }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:9px;border-radius:22px;background:rgba(16,70,110,0.62);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;animation:pop 0.2s ease-out">
+            <div style="font-size:44px;font-weight:800;color:#ffffff;-webkit-text-stroke:7px #1f7fc4;paint-order:stroke fill;text-shadow:0 6px 0 #14568a">PAUSED</div>
+            <div style="display:flex;gap:12px">
+              <button type="button" onClick="{{ onResume }}" style="padding:12px 28px;border:none;border-radius:20px;background:#8dc551;border-bottom:7px solid #6ba135;box-shadow:inset 0 4px 0 rgba(255,255,255,0.3);color:#ffffff;font-family:inherit;font-size:19px;font-weight:800;letter-spacing:0.05em;cursor:pointer" style-active="transform:translateY(3px);border-bottom-width:4px">RESUME</button>
+              <button type="button" onClick="{{ onBack }}" style="padding:12px 28px;border:none;border-radius:20px;background:#ffffff;border-bottom:7px solid #d7e3ea;color:#2c3e4a;font-family:inherit;font-size:19px;font-weight:800;letter-spacing:0.05em;cursor:pointer" style-active="transform:translateY(3px);border-bottom-width:4px">MENU</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isOver }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:9px;border-radius:22px;background:rgba(16,70,110,0.68);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;animation:pop 0.24s ease-out">
+            <div style="font-size:38px;font-weight:800;color:#ffffff;-webkit-text-stroke:7px #1f7fc4;paint-order:stroke fill;text-shadow:0 6px 0 #14568a">{{ overTitle }}</div>
+            <div style="display:flex;gap:10px">
+              <div style="padding:6px 16px;border-radius:16px;background:rgba(255,255,255,0.92);color:#e8574f;font-size:18px;font-weight:800">{{ overScore }}</div>
+              <div style="padding:6px 16px;border-radius:16px;background:rgba(255,255,255,0.92);color:#1f8fe0;font-size:18px;font-weight:800">{{ overBest }}</div>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:6px">
+              <button type="button" onClick="{{ onAgain }}" style="padding:12px 26px;border:none;border-radius:20px;background:#e8574f;border-bottom:7px solid #bb413c;box-shadow:inset 0 4px 0 rgba(255,255,255,0.28);color:#ffffff;font-family:inherit;font-size:19px;font-weight:800;letter-spacing:0.05em;cursor:pointer" style-active="transform:translateY(3px);border-bottom-width:4px">AGAIN</button>
+              <button type="button" onClick="{{ onBack }}" style="padding:12px 26px;border:none;border-radius:20px;background:#ffffff;border-bottom:7px solid #d7e3ea;color:#2c3e4a;font-family:inherit;font-size:19px;font-weight:800;letter-spacing:0.05em;cursor:pointer" style-active="transform:translateY(3px);border-bottom-width:4px">MENU</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,72px);grid-template-rows:repeat(3,72px);gap:10px;margin-top:22px">
+        <button type="button" onClick="{{ onUp }}" style="grid-column:2;grid-row:1;border:none;border-radius:22px;background:#37a7ea;border-bottom:7px solid #1f7fc4;box-shadow:inset 0 4px 0 rgba(255,255,255,0.28);color:#ffffff;font-family:inherit;font-size:30px;font-weight:800;line-height:1;cursor:pointer" style-active="transform:translateY(3px);border-bottom-width:4px">&#8593;</button>
+        <button type="button" onClick="{{ onLeft }}" style="grid-column:1;grid-row:2;border:none;border-radius:22px;background:#37a7ea;border-bottom:7px solid #1f7fc4;box-shadow:inset 0 4px 0 rgba(255,255,255,0.28);color:#ffffff;font-family:inherit;font-size:30px;font-weight:800;line-height:1;cursor:pointer" style-active="transform:translateY(3px);border-bottom-width:4px">&#8592;</button>
+        <button type="button" onClick="{{ onPause }}" style="grid-column:2;grid-row:2;border:none;border-radius:22px;background:#f2b23c;border-bottom:7px solid #cd8d20;box-shadow:inset 0 4px 0 rgba(255,255,255,0.3);color:#ffffff;font-family:inherit;font-size:17px;font-weight:800;letter-spacing:0.04em;cursor:pointer" style-active="transform:translateY(3px);border-bottom-width:4px">{{ pauseLabel }}</button>
+        <button type="button" onClick="{{ onRight }}" style="grid-column:3;grid-row:2;border:none;border-radius:22px;background:#37a7ea;border-bottom:7px solid #1f7fc4;box-shadow:inset 0 4px 0 rgba(255,255,255,0.28);color:#ffffff;font-family:inherit;font-size:30px;font-weight:800;line-height:1;cursor:pointer" style-active="transform:translateY(3px);border-bottom-width:4px">&#8594;</button>
+        <button type="button" onClick="{{ onDown }}" style="grid-column:2;grid-row:3;border:none;border-radius:22px;background:#37a7ea;border-bottom:7px solid #1f7fc4;box-shadow:inset 0 4px 0 rgba(255,255,255,0.28);color:#ffffff;font-family:inherit;font-size:30px;font-weight:800;line-height:1;cursor:pointer" style-active="transform:translateY(3px);border-bottom-width:4px">&#8595;</button>
+      </div>
+      <div style="margin-top:14px;color:#3d7c93;font-size:15px;font-weight:700;letter-spacing:0.08em">ARROW KEYS &middot; SPACE TO PAUSE</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isHelp }}" hint-placeholder-val="{{ false }}">
+    <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%;animation:pop 0.24s ease-out">
+      <div style="margin:38px 0 20px;font-size:44px;font-weight:800;color:#ffffff;-webkit-text-stroke:8px #1f7fc4;paint-order:stroke fill;text-shadow:0 7px 0 #14568a">HOW TO</div>
+      <div style="display:flex;flex-direction:column;gap:14px;width:100%">
+        <div style="display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:26px;background:rgba(255,255,255,0.9);border-bottom:6px solid #cddde5">
+          <span style="flex:0 0 auto;width:44px;height:44px;border-radius:14px;background:#8dc551;color:#fff;font-size:24px;font-weight:800;display:flex;align-items:center;justify-content:center">1</span>
+          <span style="color:#2c3e4a;font-size:19px;font-weight:600;text-wrap:pretty">Steer with the arrows or the D-pad. No U-turns.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:26px;background:rgba(255,255,255,0.9);border-bottom:6px solid #cddde5">
+          <span style="flex:0 0 auto;width:44px;height:44px;border-radius:14px;background:#e8574f;color:#fff;font-size:24px;font-weight:800;display:flex;align-items:center;justify-content:center">2</span>
+          <span style="color:#2c3e4a;font-size:19px;font-weight:600;text-wrap:pretty">Eat the berries. Each one is worth the level number.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:26px;background:rgba(255,255,255,0.9);border-bottom:6px solid #cddde5">
+          <span style="flex:0 0 auto;width:44px;height:44px;border-radius:14px;background:#f2b23c;color:#fff;font-size:24px;font-weight:800;display:flex;align-items:center;justify-content:center">3</span>
+          <span style="color:#2c3e4a;font-size:19px;font-weight:600;text-wrap:pretty">Walls and your own tail end the run. Fill the field to win.</span>
+        </div>
+      </div>
+      <button type="button" onClick="{{ onBack }}" style="margin-top:30px;padding:14px 40px;border:none;border-radius:24px;background:#8dc551;border-bottom:8px solid #6ba135;box-shadow:inset 0 5px 0 rgba(255,255,255,0.3);color:#ffffff;font-family:inherit;font-size:22px;font-weight:800;letter-spacing:0.06em;cursor:pointer" style-active="transform:translateY(4px);border-bottom-width:4px">BACK</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isScores }}" hint-placeholder-val="{{ false }}">
+    <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%;animation:pop 0.24s ease-out">
+      <div style="margin:38px 0 20px;font-size:44px;font-weight:800;color:#ffffff;-webkit-text-stroke:8px #1f7fc4;paint-order:stroke fill;text-shadow:0 7px 0 #14568a">BEST</div>
+      <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+        <sc-for list="{{ scoreRows }}" as="row" hint-placeholder-count="9">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-radius:22px;background:rgba(255,255,255,0.9);border-bottom:5px solid #cddde5">
+            <span style="color:#2c3e4a;font-size:19px;font-weight:800;letter-spacing:0.04em">{{ row.label }}</span>
+            <span style="color:#e8574f;font-size:22px;font-weight:800">{{ row.best }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <button type="button" onClick="{{ onBack }}" style="margin-top:26px;padding:14px 40px;border:none;border-radius:24px;background:#8dc551;border-bottom:8px solid #6ba135;box-shadow:inset 0 5px 0 rgba(255,255,255,0.3);color:#ffffff;font-family:inherit;font-size:22px;font-weight:800;letter-spacing:0.06em;cursor:pointer" style-active="transform:translateY(4px);border-bottom-width:4px">BACK</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:440,&quot;height&quot;:840},&quot;snakeColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#2f8fe8&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#2f8fe8&quot;,&quot;#8dc551&quot;,&quot;#c07fdc&quot;,&quot;#f2b23c&quot;]},&quot;checkerboard&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const TICK_MS = [180, 156, 136, 118, 102, 89, 77, 67, 58];
+const W = 24, H = 16, CELL = 16;
+const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+
+class Component extends DCLogic {
+  canvasRef = React.createRef();
+  state = { v: 0 };
+
+  constructor(props) {
+    super(props);
+    this.g = { phase: "menu", level: 1, snake: [], dir: "right", queue: [], food: null, score: 0, result: null, newBest: false };
+    this.bests = {};
+    this.sound = true;
+  }
+
+  componentDidMount() {
+    try { this.bests = JSON.parse(localStorage.getItem("snake-candy-bests") || "{}") || {}; } catch (e) { this.bests = {}; }
+    try { this.sound = localStorage.getItem("snake-candy-sound") !== "off"; } catch (e) { this.sound = true; }
+    this.last = performance.now();
+    this.acc = 0;
+    this.raf = requestAnimationFrame(this.frame);
+    window.addEventListener("keydown", this.onKey);
+    this.bump();
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
+    window.removeEventListener("keydown", this.onKey);
+  }
+
+  bump() { this.setState(s => ({ v: s.v + 1 })); }
+
+  onKey = (e) => {
+    const map = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right" };
+    const g = this.g;
+    if (map[e.key]) {
+      e.preventDefault();
+      if (g.phase === "playing") this.queueDir(map[e.key]);
+      return;
+    }
+    if (e.key === " " || e.key === "Escape") {
+      e.preventDefault();
+      if (g.phase === "playing") { g.phase = "paused"; this.bump(); }
+      else if (g.phase === "paused") { g.phase = "playing"; this.last = performance.now(); this.bump(); }
+      return;
+    }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (g.phase === "menu") this.startRound(g.level);
+      else if (g.phase === "over") this.startRound(g.level);
+    }
+  };
+
+  queueDir(dir) {
+    const g = this.g;
+    const cur = g.queue.length ? g.queue[g.queue.length - 1] : g.dir;
+    const opposite = { up: "down", down: "up", left: "right", right: "left" };
+    if (dir === cur || dir === opposite[cur]) return;
+    if (g.queue.length < 2) g.queue.push(dir);
+  }
+
+  spawnFood(snake) {
+    const free = [];
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      if (!snake.some(s => s.x === x && s.y === y)) free.push({ x, y });
+    }
+    if (!free.length) return null;
+    return free[Math.floor(Math.random() * free.length)];
+  }
+
+  startRound(level) {
+    const y = Math.floor(H / 2), hx = Math.floor(W / 2);
+    const snake = [{ x: hx, y }, { x: hx - 1, y }, { x: hx - 2, y }];
+    this.g = { phase: "playing", level, snake, dir: "right", queue: [], food: this.spawnFood(snake), score: 0, result: null, newBest: false };
+    this.last = performance.now();
+    this.acc = 0;
+    this.bump();
+  }
+
+  recordBest() {
+    const g = this.g;
+    const prev = this.bests[g.level] || 0;
+    if (g.score > prev) {
+      this.bests = Object.assign({}, this.bests, { [g.level]: g.score });
+      g.newBest = true;
+      try { localStorage.setItem("snake-candy-bests", JSON.stringify(this.bests)); } catch (e) {}
+    }
+  }
+
+  beep(kind) {
+    if (!this.sound) return;
+    try {
+      this.ac = this.ac || new (window.AudioContext || window.webkitAudioContext)();
+      const o = this.ac.createOscillator(), gn = this.ac.createGain();
+      o.type = kind === "die" ? "sawtooth" : "triangle";
+      o.frequency.value = kind === "die" ? 130 : 660;
+      gn.gain.value = 0.07;
+      o.connect(gn).connect(this.ac.destination);
+      const t = this.ac.currentTime;
+      gn.gain.setValueAtTime(0.07, t);
+      gn.gain.exponentialRampToValueAtTime(0.001, t + (kind === "die" ? 0.35 : 0.12));
+      o.start(t); o.stop(t + (kind === "die" ? 0.36 : 0.13));
+    } catch (e) {}
+  }
+
+  tick() {
+    const g = this.g;
+    if (g.phase !== "playing") return;
+    const dir = g.queue.length ? g.queue.shift() : g.dir;
+    g.dir = dir;
+    const [dx, dy] = DIRS[dir];
+    const head = { x: g.snake[0].x + dx, y: g.snake[0].y + dy };
+    if (head.x < 0 || head.y < 0 || head.x >= W || head.y >= H) return this.die();
+    const willEat = g.food && head.x === g.food.x && head.y === g.food.y;
+    const body = willEat ? g.snake : g.snake.slice(0, -1);
+    if (body.some(s => s.x === head.x && s.y === head.y)) return this.die();
+    const snake = [head].concat(willEat ? g.snake : g.snake.slice(0, -1));
+    g.snake = snake;
+    if (!willEat) return;
+    g.score += g.level;
+    g.food = this.spawnFood(snake);
+    this.beep("eat");
+    if (!g.food) {
+      g.phase = "over"; g.result = "won"; this.recordBest();
+    }
+    this.bump();
+  }
+
+  die() {
+    const g = this.g;
+    g.phase = "over"; g.result = "died";
+    this.recordBest();
+    this.beep("die");
+    this.bump();
+  }
+
+  frame = (t) => {
+    const dt = Math.min(t - this.last, 400);
+    this.last = t;
+    if (this.g.phase === "playing") {
+      this.acc += dt;
+      const ms = TICK_MS[this.g.level - 1];
+      let guard = 0;
+      while (this.acc >= ms && guard++ < 4) { this.acc -= ms; this.tick(); }
+    }
+    this.draw(t);
+    this.raf = requestAnimationFrame(this.frame);
+  };
+
+  roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  draw(t) {
+    const c = this.canvasRef.current;
+    if (!c) return;
+    const dpr = window.devicePixelRatio || 1;
+    if (c.width !== Math.round(W * CELL * dpr)) {
+      c.width = Math.round(W * CELL * dpr);
+      c.height = Math.round(H * CELL * dpr);
+    }
+    const ctx = c.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const checker = this.props.checkerboard !== false;
+    const a = "#a5dd76", b = "#9bd76c";
+    ctx.fillStyle = a;
+    ctx.fillRect(0, 0, W * CELL, H * CELL);
+    if (checker) {
+      ctx.fillStyle = b;
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        if ((x + y) % 2 === 0) ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
+      }
+    }
+
+    const g = this.g;
+    if (g.food) {
+      const pulse = 0.9 + 0.1 * Math.sin(t / 220);
+      const cx = g.food.x * CELL + CELL / 2, cy = g.food.y * CELL + CELL / 2;
+      const r = CELL * 0.38 * pulse;
+      ctx.save();
+      ctx.fillStyle = "rgba(30,70,20,0.18)";
+      ctx.beginPath(); ctx.ellipse(cx, cy + r * 0.9, r * 0.9, r * 0.4, 0, 0, Math.PI * 2); ctx.fill();
+      const grd = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.4, r * 0.1, cx, cy, r * 1.2);
+      grd.addColorStop(0, "#ff8f86"); grd.addColorStop(1, "#d93b4e");
+      ctx.fillStyle = grd;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,0.85)";
+      ctx.beginPath(); ctx.arc(cx - r * 0.35, cy - r * 0.4, r * 0.22, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#5aa832";
+      this.roundRect(ctx, cx + r * 0.1, cy - r * 1.35, r * 0.8, r * 0.42, r * 0.2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    if (g.snake.length) {
+      const body = this.props.snakeColor || "#2f8fe8";
+      const shade = "#1b6fae";
+      const pts = g.snake.map(s => ({ x: s.x * CELL + CELL / 2, y: s.y * CELL + CELL / 2 }));
+      ctx.save();
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = shade;
+      ctx.lineWidth = CELL * 0.92;
+      ctx.beginPath();
+      ctx.moveTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+      for (let i = pts.length - 2; i >= 0; i--) ctx.lineTo(pts[i].x, pts[i].y);
+      if (pts.length === 1) ctx.lineTo(pts[0].x + 0.01, pts[0].y);
+      ctx.stroke();
+      ctx.strokeStyle = body;
+      ctx.lineWidth = CELL * 0.72;
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(255,255,255,0.28)";
+      ctx.lineWidth = CELL * 0.2;
+      ctx.stroke();
+
+      const head = pts[0];
+      const [dx, dy] = DIRS[g.dir];
+      ctx.fillStyle = shade;
+      ctx.beginPath(); ctx.arc(head.x, head.y, CELL * 0.48, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = body;
+      ctx.beginPath(); ctx.arc(head.x, head.y, CELL * 0.4, 0, Math.PI * 2); ctx.fill();
+      const ex = head.x + dx * CELL * 0.14, ey = head.y + dy * CELL * 0.14;
+      const px = -dy * CELL * 0.18, py = dx * CELL * 0.18;
+      for (const s of [1, -1]) {
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath(); ctx.arc(ex + px * s, ey + py * s, CELL * 0.15, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#2b2118";
+        ctx.beginPath(); ctx.arc(ex + px * s + dx * CELL * 0.05, ey + py * s + dy * CELL * 0.05, CELL * 0.075, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+
+  renderVals() {
+    const g = this.g;
+    const best = this.bests[g.level] || 0;
+    const bestAll = Object.keys(this.bests).reduce((m, k) => Math.max(m, this.bests[k] || 0), 0);
+    const go = (phase) => () => { this.g.phase = phase; this.bump(); };
+    return {
+      isMenu: g.phase === "menu",
+      isLevels: g.phase === "levels",
+      isHelp: g.phase === "help",
+      isScores: g.phase === "scores",
+      isBoard: g.phase === "playing" || g.phase === "paused" || g.phase === "over",
+      isPaused: g.phase === "paused",
+      isOver: g.phase === "over",
+      canvasRef: this.canvasRef,
+      hudBest: bestAll,
+      scoreText: String(g.score).padStart(3, "0"),
+      levelText: g.level,
+      pauseLabel: g.phase === "paused" ? "PLAY" : "PAUSE",
+      soundLabel: this.sound ? "SOUND" : "MUTED",
+      soundGlyph: this.sound ? "♪" : "✕",
+      overTitle: g.result === "won" ? "CLEARED!" : g.newBest ? "NEW BEST!" : "GAME OVER",
+      overScore: "SCORE " + g.score,
+      overBest: "BEST " + best,
+      levelTiles: TICK_MS.map((_, i) => ({
+        label: i + 1,
+        best: "BEST " + (this.bests[i + 1] || 0),
+        onSelect: () => this.startRound(i + 1),
+      })),
+      scoreRows: TICK_MS.map((_, i) => ({ label: "LEVEL " + (i + 1), best: this.bests[i + 1] || 0 })),
+      onPlay: () => this.startRound(g.level),
+      onLevels: go("levels"),
+      onHelp: go("help"),
+      onScores: go("scores"),
+      onBack: () => { this.g.phase = "menu"; this.bump(); },
+      onResume: () => { this.g.phase = "playing"; this.last = performance.now(); this.bump(); },
+      onAgain: () => this.startRound(g.level),
+      onPause: () => { this.g.phase = g.phase === "paused" ? "playing" : "paused"; this.last = performance.now(); this.bump(); },
+      onToggleSound: () => {
+        this.sound = !this.sound;
+        try { localStorage.setItem("snake-candy-sound", this.sound ? "on" : "off"); } catch (e) {}
+        this.bump();
+      },
+      onUp: () => this.queueDir("up"),
+      onDown: () => this.queueDir("down"),
+      onLeft: () => this.queueDir("left"),
+      onRight: () => this.queueDir("right"),
+    };
+  }
+}
+</script>
+</body>
+</html>
