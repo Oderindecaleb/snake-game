@@ -96,8 +96,14 @@ describe("recordScore", () => {
 });
 
 describe("loadMuted", () => {
-  it("defaults to muted when nothing is stored", () => {
+  it("defaults to unmuted when nothing is stored", () => {
     stubLocalStorage();
+    expect(loadMuted()).toBe(false);
+  });
+
+  it("reads a stored muted preference", () => {
+    const stub = stubLocalStorage();
+    stub.setItem("snake.muted.v1", "true");
     expect(loadMuted()).toBe(true);
   });
 
@@ -107,13 +113,13 @@ describe("loadMuted", () => {
     expect(loadMuted()).toBe(false);
   });
 
-  it("falls back to muted when localStorage throws", () => {
+  it("falls back to unmuted when localStorage throws", () => {
     stubLocalStorage({
       getItem: () => {
         throw new Error("blocked");
       },
     });
-    expect(loadMuted()).toBe(true);
+    expect(loadMuted()).toBe(false);
   });
 });
 
