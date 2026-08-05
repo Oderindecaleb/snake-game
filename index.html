@@ -7,19 +7,6 @@
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <div id="game-shell">
-      <canvas id="game-canvas"></canvas>
-      <div class="control-row">
-        <button id="mute-toggle" type="button" aria-pressed="true">Sound: Off</button>
-        <button id="dpad-start" type="button">START</button>
-      </div>
-      <div class="dpad">
-        <button id="dpad-up" class="dpad-btn dpad-up" type="button" aria-label="Up">&uarr;</button>
-        <button id="dpad-left" class="dpad-btn dpad-left" type="button" aria-label="Left">&larr;</button>
-        <button id="dpad-right" class="dpad-btn dpad-right" type="button" aria-label="Right">&rarr;</button>
-        <button id="dpad-down" class="dpad-btn dpad-down" type="button" aria-label="Down">&darr;</button>
-      </div>
-    </div>
     <div class="candy-clouds" aria-hidden="true">
       <span class="candy-cloud candy-cloud-1"></span>
       <span class="candy-cloud candy-cloud-2"></span>
@@ -27,7 +14,7 @@
       <span class="candy-cloud candy-cloud-4"></span>
       <span class="candy-cloud candy-cloud-5"></span>
     </div>
-    <div id="candy-shell" class="candy-hidden">
+    <div id="candy-shell">
       <header class="candy-header">
         <button id="candy-back" class="candy-icon-btn" type="button" aria-label="Back to menu">&#8592;</button>
         <div class="candy-best-badge">
