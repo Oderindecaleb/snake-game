@@ -127,4 +127,12 @@ describe("createAudio", () => {
     expect(oscillator.type).toBe("square");
     expect(oscillator.frequency.value).toBe(880);
   });
+
+  it("uses gain 0.05 for the existing 'eat' kind, unchanged from before", () => {
+    const instances = stubAudioContext();
+    const audio = createAudio(false);
+    audio.play("eat");
+    const gain = instances[0].createGain.mock.results[0]?.value as StubGain;
+    expect(gain.gain.setValueAtTime).toHaveBeenCalledWith(0.05, 0);
+  });
 });

@@ -4,13 +4,14 @@ interface BlipConfig {
   type: OscillatorType;
   frequency: number;
   rampSeconds: number;
+  gain: number;
 }
 
 const BLIP_CONFIG: Record<BlipKind, BlipConfig> = {
-  eat: { type: "square", frequency: 880, rampSeconds: 0.12 },
-  turn: { type: "square", frequency: 220, rampSeconds: 0.12 },
-  death: { type: "square", frequency: 110, rampSeconds: 0.12 },
-  die: { type: "sawtooth", frequency: 130, rampSeconds: 0.35 },
+  eat: { type: "square", frequency: 880, rampSeconds: 0.12, gain: 0.05 },
+  turn: { type: "square", frequency: 220, rampSeconds: 0.12, gain: 0.05 },
+  death: { type: "square", frequency: 110, rampSeconds: 0.12, gain: 0.05 },
+  die: { type: "sawtooth", frequency: 130, rampSeconds: 0.35, gain: 0.07 },
 };
 
 export function createAudio(initiallyMuted: boolean) {
@@ -35,7 +36,7 @@ export function createAudio(initiallyMuted: boolean) {
       const gain = ctx.createGain();
       oscillator.type = config.type;
       oscillator.frequency.value = config.frequency;
-      gain.gain.setValueAtTime(0.07, ctx.currentTime);
+      gain.gain.setValueAtTime(config.gain, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + config.rampSeconds);
       oscillator.connect(gain).connect(ctx.destination);
       oscillator.start();
