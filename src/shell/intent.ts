@@ -7,4 +7,7 @@ export type Intent =
   | { type: "cancel" }
   | { type: "toTitle" }
   | { type: "selectLevel"; level: number }
-  | { type: "toggleMute" };
+  | { type: "toggleMute" }
+  | { type: "goToLevels" }
+  | { type: "goToHelp" }
+  | { type: "goToScores" };
