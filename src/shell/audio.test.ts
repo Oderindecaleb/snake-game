@@ -119,20 +119,20 @@ describe("createAudio", () => {
     expect(oscillator.frequency.value).toBe(130);
   });
 
-  it("still plays the existing 'eat' kind as a square wave at 880Hz", () => {
+  it("plays 'eat' as a triangle wave at 660Hz", () => {
     const instances = stubAudioContext();
     const audio = createAudio(false);
     audio.play("eat");
     const oscillator = instances[0].createOscillator.mock.results[0]?.value as StubOscillator;
-    expect(oscillator.type).toBe("square");
-    expect(oscillator.frequency.value).toBe(880);
+    expect(oscillator.type).toBe("triangle");
+    expect(oscillator.frequency.value).toBe(660);
   });
 
-  it("uses gain 0.05 for the existing 'eat' kind, unchanged from before", () => {
+  it("uses gain 0.07 for the 'eat' kind", () => {
     const instances = stubAudioContext();
     const audio = createAudio(false);
     audio.play("eat");
     const gain = instances[0].createGain.mock.results[0]?.value as StubGain;
-    expect(gain.gain.setValueAtTime).toHaveBeenCalledWith(0.05, 0);
+    expect(gain.gain.setValueAtTime).toHaveBeenCalledWith(0.07, 0);
   });
 });

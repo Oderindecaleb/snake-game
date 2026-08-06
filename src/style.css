@@ -12,7 +12,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   font-family: "Baloo 2", "Trebuchet MS", sans-serif;
 }
 
@@ -29,10 +30,6 @@ body {
 @keyframes candy-pop {
   from { transform: scale(0.86); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
-}
-
-.candy-hidden {
-  display: none;
 }
 
 .candy-clouds {
@@ -365,6 +362,8 @@ body {
 
 .candy-canvas-frame {
   position: relative;
+  min-width: 220px;
+  min-height: 160px;
   padding: 9px;
   border-radius: 30px;
   background: linear-gradient(180deg, #ffffff, #e6f1f6);

@@ -8,7 +8,7 @@ interface BlipConfig {
 }
 
 const BLIP_CONFIG: Record<BlipKind, BlipConfig> = {
-  eat: { type: "square", frequency: 880, rampSeconds: 0.12, gain: 0.05 },
+  eat: { type: "triangle", frequency: 660, rampSeconds: 0.12, gain: 0.07 },
   turn: { type: "square", frequency: 220, rampSeconds: 0.12, gain: 0.05 },
   death: { type: "square", frequency: 110, rampSeconds: 0.12, gain: 0.05 },
   die: { type: "sawtooth", frequency: 130, rampSeconds: 0.35, gain: 0.07 },
@@ -66,14 +66,10 @@ export function createAudio(initiallyMuted: boolean) {
     return muted;
   }
 
-  function setMuted(value: boolean): void {
-    muted = value;
-  }
-
   function toggleMuted(): boolean {
     muted = !muted;
     return muted;
   }
 
-  return { play, primeContext, isMuted, setMuted, toggleMuted };
+  return { play, primeContext, isMuted, toggleMuted };
 }

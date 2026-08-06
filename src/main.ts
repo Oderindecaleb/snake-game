@@ -49,7 +49,14 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
     overScore: document.querySelector<HTMLElement>("#over-score"),
     overBest: document.querySelector<HTMLElement>("#over-best"),
     dpadPause: document.querySelector<HTMLButtonElement>("#candy-dpad-pause"),
+    pausedResume: document.querySelector<HTMLButtonElement>("#paused-resume"),
+    overAgain: document.querySelector<HTMLButtonElement>("#over-again"),
   };
+
+  // Tracks the phase kind as of the previous render() so the paused/gameOver overlay
+  // focus-move below (see Finding 4) only fires on the transition INTO that phase,
+  // not on every render() call during the ~17/sec tick loop while already there.
+  let lastPhaseKind: GameState["phase"]["kind"] = state.phase.kind;
 
   // Per-level elements are looked up once here rather than on every render(), which
   // runs on every game tick (up to ~17/sec at level 9).
@@ -104,6 +111,20 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
 
     el.overlayPaused?.classList.toggle("candy-visible", phase.kind === "paused");
     el.overlayOver?.classList.toggle("candy-visible", phase.kind === "gameOver");
+
+    // Move keyboard focus onto the overlay's primary action button when we just
+    // transitioned into paused/gameOver (not on every render while already there -
+    // see Finding 4). Without this, focus can be left on a D-pad button from an
+    // earlier click, and native button-activation would fire that button's own
+    // (wrong) intent on the next Enter/Space press instead of the overlay's.
+    if (phase.kind !== lastPhaseKind) {
+      if (phase.kind === "paused") {
+        el.pausedResume?.focus();
+      } else if (phase.kind === "gameOver") {
+        el.overAgain?.focus();
+      }
+    }
+    lastPhaseKind = phase.kind;
 
     if (el.hudBest) {
       el.hudBest.textContent = String(allTimeBest());

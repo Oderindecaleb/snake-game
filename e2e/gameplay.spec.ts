@@ -77,3 +77,38 @@ test("navigates to the help and scores screens and back", async ({ page }) => {
   await page.click("#scores-back");
   await expect.poll(() => page.evaluate(() => window.__snakeTestState__().phase)).toBe("title");
 });
+
+test("PLAY / Enter starts a round directly, never routing through level select", async ({ page }) => {
+  await page.goto("/");
+  await expect.poll(() => page.evaluate(() => window.__snakeTestState__().phase)).toBe("title");
+
+  // applyIntent's "title" branch (src/main.ts) sets phase straight to "playing" in
+  // the same synchronous call that handles the confirm intent, so there is no
+  // intermediate tick where the phase could be observed as "levelSelect" - the very
+  // first read after the keypress already reflects the final phase.
+  await page.keyboard.press("Enter");
+  expect(await page.evaluate(() => window.__snakeTestState__().phase)).toBe("playing");
+});
+
+test("the header back arrow abandons a live round immediately, with no pause step", async ({ page }) => {
+  await page.goto("/");
+  await page.click("#menu-levels");
+  await page.click('.candy-level-tile[data-level="1"]');
+  await expect.poll(() => page.evaluate(() => window.__snakeTestState__().phase)).toBe("playing");
+
+  await page.click("#candy-back");
+  await expect.poll(() => page.evaluate(() => window.__snakeTestState__().phase)).toBe("title");
+});
+
+test("the D-pad pause button toggles playing and paused", async ({ page }) => {
+  await page.goto("/");
+  await page.click("#menu-levels");
+  await page.click('.candy-level-tile[data-level="1"]');
+  await expect.poll(() => page.evaluate(() => window.__snakeTestState__().phase)).toBe("playing");
+
+  await page.click("#candy-dpad-pause");
+  await expect.poll(() => page.evaluate(() => window.__snakeTestState__().phase)).toBe("paused");
+
+  await page.click("#candy-dpad-pause");
+  await expect.poll(() => page.evaluate(() => window.__snakeTestState__().phase)).toBe("playing");
+});

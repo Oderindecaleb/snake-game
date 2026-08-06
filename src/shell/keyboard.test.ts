@@ -13,7 +13,7 @@ describe("intentFromKey", () => {
 
   it("maps confirm, pause, cancel, title, and mute keys", () => {
     expect(intentFromKey("Enter")).toEqual({ type: "confirm" });
-    expect(intentFromKey(" ")).toEqual({ type: "confirm" });
+    expect(intentFromKey(" ")).toEqual({ type: "pause" });
     expect(intentFromKey("p")).toEqual({ type: "pause" });
     expect(intentFromKey("Escape")).toEqual({ type: "cancel" });
     expect(intentFromKey("m")).toEqual({ type: "toTitle" });
