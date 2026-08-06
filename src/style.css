@@ -12,7 +12,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #game-shell {
@@ -134,7 +135,8 @@ canvas {
   position: relative;
   width: min(94vw, 440px);
   max-height: 96vh;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   margin: 0 auto;
   padding: 18px 20px 26px;
   box-sizing: border-box;

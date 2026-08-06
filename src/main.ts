@@ -152,6 +152,13 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
         el.overBest.textContent = `BEST ${bestForCurrentLevel()}`;
       }
     }
+
+    // Re-measure and re-apply sizing against whatever screen is actually visible now
+    // (the classList.toggle calls above may have just changed it). This is what makes
+    // the board screen's first appearance size the canvas correctly instead of against
+    // its display:none-era zero-height chrome; see resize()'s own comment for why
+    // calling it here every render() is safe/cheap.
+    resize();
   }
 
   // The candy shell is a flex column: header, then the active screen. The board
@@ -180,6 +187,14 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
   // Backing store is sized for devicePixelRatio so the board stays crisp on high-DPI
   // screens; a canvas transform keeps all draw calls in CSS-pixel logical units so
   // playfield code never needs to know about DPR.
+  //
+  // Called both on window `resize` and at the end of every render() (see below) so
+  // that the very first time #screen-board actually becomes visible, sizing gets
+  // recomputed against its real (non-zero) chrome measurements rather than the
+  // stale/zero ones read while the board screen was still `display: none`. render()
+  // runs up to ~17/sec while playing, so this early-returns as a cheap no-op once the
+  // computed size stops changing, to avoid writing to canvas.style/width/height and
+  // calling ctx.setTransform on every single tick.
   function resize(): void {
     const maxWidth = Math.min(window.innerWidth - 56, 384);
     const widthCellPx = cellPixelSize(maxWidth);
@@ -187,15 +202,22 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
     const maxHeight = window.innerHeight - boardChromeHeightPx();
     const heightCellPx = Math.max(1, Math.floor(maxHeight / GRID.height));
 
-    currentCellPx = Math.max(4, Math.min(widthCellPx, heightCellPx));
+    const nextCellPx = Math.max(4, Math.min(widthCellPx, heightCellPx));
     const dpr = window.devicePixelRatio || 1;
-    const cssWidth = GRID.width * currentCellPx;
-    const cssHeight = GRID.height * currentCellPx;
+    const cssWidth = GRID.width * nextCellPx;
+    const cssHeight = GRID.height * nextCellPx;
+    const nextWidthPx = Math.round(cssWidth * dpr);
+    const nextHeightPx = Math.round(cssHeight * dpr);
 
+    if (nextCellPx === currentCellPx && canvas.width === nextWidthPx && canvas.height === nextHeightPx) {
+      return;
+    }
+
+    currentCellPx = nextCellPx;
     canvas.style.width = `${cssWidth}px`;
     canvas.style.height = `${cssHeight}px`;
-    canvas.width = Math.round(cssWidth * dpr);
-    canvas.height = Math.round(cssHeight * dpr);
+    canvas.width = nextWidthPx;
+    canvas.height = nextHeightPx;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
