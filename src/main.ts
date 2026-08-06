@@ -385,6 +385,21 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
     });
   }
 
+  // The D-pad is always visible (not touch-only), so mouse/trackpad players
+  // routinely click it during normal keyboard play. A plain click leaves the
+  // button focused by default, and the keydown handler above defers to native
+  // button-activation whenever a <button> is focused - so a later Space/Enter
+  // press meant for pause/confirm would silently re-fire the D-pad button's own
+  // intent instead. preventDefault() on mousedown stops the browser's default
+  // focus-on-click behavior without removing the button from the tab order
+  // (unlike tabindex="-1"), and the click event - and its handler above - still
+  // fires normally afterward.
+  function preventFocusOnMouseDown(selector: string): void {
+    document.querySelector<HTMLButtonElement>(selector)?.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+    });
+  }
+
   onClick("#candy-back", { type: "toTitle" });
   onClick("#candy-sound", { type: "toggleMute" });
   onClick("#menu-play", { type: "confirm" });
@@ -400,9 +415,11 @@ function runGame(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
   onClick("#over-again", { type: "confirm" });
   onClick("#over-menu", { type: "toTitle" });
   onClick("#candy-dpad-pause", { type: "pause" });
+  preventFocusOnMouseDown("#candy-dpad-pause");
 
   for (const direction of ["up", "down", "left", "right"] as const) {
     onClick(`#candy-dpad-${direction}`, { type: "direction", direction });
+    preventFocusOnMouseDown(`#candy-dpad-${direction}`);
   }
 
   // Level tiles start that level directly, matching the reference's tile.onSelect.
