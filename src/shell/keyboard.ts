@@ -14,7 +14,7 @@ const KEY_TO_INTENT: Record<string, Intent> = {
   d: { type: "direction", direction: "right" },
   D: { type: "direction", direction: "right" },
   Enter: { type: "confirm" },
-  " ": { type: "confirm" },
+  " ": { type: "pause" },
   p: { type: "pause" },
   P: { type: "pause" },
   Escape: { type: "cancel" },

@@ -15,7 +15,9 @@ export type Phase =
   | { kind: "levelSelect"; level: number }
   | { kind: "playing" }
   | { kind: "paused" }
-  | { kind: "gameOver"; result: "died" | "won" };
+  | { kind: "gameOver"; result: "died" | "won" }
+  | { kind: "help" }
+  | { kind: "scores" };
 
 export interface LevelConfig {
   level: number;

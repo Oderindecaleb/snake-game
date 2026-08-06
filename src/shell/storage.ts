@@ -55,9 +55,9 @@ const MUTED_STORAGE_KEY = "snake.muted.v1";
 export function loadMuted(): boolean {
   try {
     const raw = localStorage.getItem(MUTED_STORAGE_KEY);
-    return raw === null ? true : raw === "true";
+    return raw === null ? false : raw === "true";
   } catch {
-    return true;
+    return false;
   }
 }
 

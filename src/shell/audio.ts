@@ -1,9 +1,17 @@
-type BlipKind = "eat" | "turn" | "death";
+type BlipKind = "eat" | "turn" | "death" | "die";
 
-const BLIP_FREQUENCY: Record<BlipKind, number> = {
-  eat: 880,
-  turn: 220,
-  death: 110,
+interface BlipConfig {
+  type: OscillatorType;
+  frequency: number;
+  rampSeconds: number;
+  gain: number;
+}
+
+const BLIP_CONFIG: Record<BlipKind, BlipConfig> = {
+  eat: { type: "triangle", frequency: 660, rampSeconds: 0.12, gain: 0.07 },
+  turn: { type: "square", frequency: 220, rampSeconds: 0.12, gain: 0.05 },
+  death: { type: "square", frequency: 110, rampSeconds: 0.12, gain: 0.05 },
+  die: { type: "sawtooth", frequency: 130, rampSeconds: 0.35, gain: 0.07 },
 };
 
 export function createAudio(initiallyMuted: boolean) {
@@ -23,15 +31,16 @@ export function createAudio(initiallyMuted: boolean) {
     }
     try {
       const ctx = ensureContext();
+      const config = BLIP_CONFIG[kind];
       const oscillator = ctx.createOscillator();
       const gain = ctx.createGain();
-      oscillator.type = "square";
-      oscillator.frequency.value = BLIP_FREQUENCY[kind];
-      gain.gain.setValueAtTime(0.05, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
+      oscillator.type = config.type;
+      oscillator.frequency.value = config.frequency;
+      gain.gain.setValueAtTime(config.gain, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + config.rampSeconds);
       oscillator.connect(gain).connect(ctx.destination);
       oscillator.start();
-      oscillator.stop(ctx.currentTime + 0.12);
+      oscillator.stop(ctx.currentTime + config.rampSeconds);
     } catch {
       // AudioContext construction/playback can throw or be unavailable (e.g. old iOS
       // Safari, Web Audio disabled). Audio failing should degrade to "no sound",
@@ -57,14 +66,10 @@ export function createAudio(initiallyMuted: boolean) {
     return muted;
   }
 
-  function setMuted(value: boolean): void {
-    muted = value;
-  }
-
   function toggleMuted(): boolean {
     muted = !muted;
     return muted;
   }
 
-  return { play, primeContext, isMuted, setMuted, toggleMuted };
+  return { play, primeContext, isMuted, toggleMuted };
 }
