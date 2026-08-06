@@ -1,97 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap");
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
 body {
   margin: 0;
-  height: 100%;
-  background: #05070a;
+  min-height: 100%;
+  background: #59c6ef;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-#game-shell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-canvas {
-  image-rendering: pixelated;
-  touch-action: none;
-  max-width: 100vw;
-  max-height: 100vh;
-  display: block;
-}
-
-.control-row {
-  display: flex;
-  gap: 8px;
-}
-
-.control-row button {
-  font-family: "Courier New", monospace;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: #38ff7a;
-  background: #04160a;
-  border: 1px solid #1d6b38;
-  border-radius: 3px;
-  padding: 3px 6px;
-  cursor: pointer;
-}
-
-.dpad {
-  display: none;
-  grid-template-columns: repeat(3, 44px);
-  grid-template-rows: repeat(3, 44px);
-  gap: 6px;
-}
-
-@media (pointer: coarse) and (hover: none) {
-  .dpad {
-    display: grid;
-  }
-}
-
-.dpad-btn {
-  font-family: "Courier New", monospace;
-  font-size: 18px;
-  color: #38ff7a;
-  background: #04160a;
-  border: 1px solid #1d6b38;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dpad-up {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.dpad-left {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.dpad-right {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-.dpad-down {
-  grid-column: 2;
-  grid-row: 3;
+  overflow: hidden;
+  font-family: "Baloo 2", "Trebuchet MS", sans-serif;
 }
 
 /* ---------- Snake Candy redesign (additive; wired live in Task 7) ---------- */

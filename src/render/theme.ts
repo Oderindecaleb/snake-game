@@ -2,17 +2,6 @@ import type { Grid } from "../game/types";
 
 export const GRID: Grid = { width: 24, height: 16 };
 
-export const HUD_HEIGHT_PX = 28;
-
-export const THEME = {
-  bg: "#05070a",
-  field: "#04160a",
-  ink: "#38ff7a",
-  border: "#1d6b38",
-  glow: "rgba(56,255,122,0.8)",
-  scanline: "rgba(0,0,0,0.38)",
-} as const;
-
 export const CANDY = {
   checkerA: "#a5dd76",
   checkerB: "#9bd76c",

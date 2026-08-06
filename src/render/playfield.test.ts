@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { GameState } from "../game/types";
-import { cellCenter, drawBorder, drawFood, drawScanlines, drawSnake, headDirectionVector, drawBoard, drawCandyFood, drawCandySnake, drawCheckerboard } from "./playfield";
+import { cellCenter, drawBoard, drawCandyFood, drawCandySnake, drawCheckerboard, headDirectionVector } from "./playfield";
 
 describe("cellCenter", () => {
   it("centers a cell within its pixel square", () => {
@@ -47,68 +47,6 @@ function createStubCtx() {
     shadowBlur: 0,
   };
 }
-
-describe("drawBorder", () => {
-  it("draws without throwing", () => {
-    const ctx = createStubCtx();
-    expect(() => drawBorder(ctx as unknown as CanvasRenderingContext2D, 240, 160)).not.toThrow();
-    expect(ctx.strokeRect).toHaveBeenCalledOnce();
-  });
-});
-
-describe("drawSnake", () => {
-  it("does nothing for an empty snake", () => {
-    const ctx = createStubCtx();
-    drawSnake(ctx as unknown as CanvasRenderingContext2D, [], 10);
-    expect(ctx.arc).not.toHaveBeenCalled();
-  });
-
-  it("draws a head circle for a single-cell snake without a body stroke", () => {
-    const ctx = createStubCtx();
-    drawSnake(ctx as unknown as CanvasRenderingContext2D, [{ x: 1, y: 1 }], 10);
-    expect(ctx.stroke).not.toHaveBeenCalled();
-    expect(ctx.arc).toHaveBeenCalled();
-  });
-
-  it("draws a body stroke and a head for a multi-cell snake", () => {
-    const ctx = createStubCtx();
-    const snake = [
-      { x: 2, y: 2 },
-      { x: 1, y: 2 },
-      { x: 0, y: 2 },
-    ];
-    drawSnake(ctx as unknown as CanvasRenderingContext2D, snake, 10);
-    expect(ctx.stroke).toHaveBeenCalledOnce();
-    expect(ctx.arc).toHaveBeenCalled();
-  });
-});
-
-describe("drawFood", () => {
-  it("does nothing when there is no food", () => {
-    const ctx = createStubCtx();
-    drawFood(ctx as unknown as CanvasRenderingContext2D, null, 10, 0);
-    expect(ctx.fillRect).not.toHaveBeenCalled();
-  });
-
-  it("draws a rotated square for food", () => {
-    const ctx = createStubCtx();
-    drawFood(ctx as unknown as CanvasRenderingContext2D, { x: 3, y: 3 }, 10, 0);
-    expect(ctx.rotate).toHaveBeenCalledWith(Math.PI / 4);
-    expect(ctx.fillRect).toHaveBeenCalledOnce();
-  });
-});
-
-describe("drawScanlines", () => {
-  it("draws one line per memoized offset and caches offsets by height", () => {
-    const ctx = createStubCtx();
-    drawScanlines(ctx as unknown as CanvasRenderingContext2D, 240, 160);
-    const firstCallCount = ctx.fillRect.mock.calls.length;
-    expect(firstCallCount).toBeGreaterThan(0);
-
-    drawScanlines(ctx as unknown as CanvasRenderingContext2D, 240, 160);
-    expect(ctx.fillRect.mock.calls.length).toBe(firstCallCount * 2);
-  });
-});
 
 describe("drawCheckerboard", () => {
   it("fills the checkerboard without throwing", () => {
